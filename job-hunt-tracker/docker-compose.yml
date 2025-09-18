@@ -1,0 +1,34 @@
+services:
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: jobtracker
+      POSTGRES_PASSWORD: jobtrackerpass
+      POSTGRES_DB: jobtracker
+    ports:
+      - '5432:5432'
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  backend:
+    build: ./backend
+    command: npm run start:prod
+    # volumes:
+    #   - ./backend:/app
+    ports:
+      - '5000:5000'
+    environment:
+      DATABASE_URL: postgres://jobtracker:jobtrackerpass@db:5432/jobtracker
+    depends_on:
+      - db
+  frontend:
+    build: ./frontend
+    command: npm run dev -- --host
+    # volumes:
+    #   - ./frontend:/app
+    ports:
+      - '5173:5173'
+    depends_on:
+      - backend
+volumes:
+  db_data:
