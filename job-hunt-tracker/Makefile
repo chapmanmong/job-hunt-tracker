@@ -3,23 +3,25 @@
 .PHONY: up down logs build frontend backend db
 
 up:
-	docker-compose up --build -d
-	docker-compose logs -f
+	docker compose up --build -d
+	@echo "Waiting for services to start..."
+	@sleep 5
+	docker compose logs -f
 
 down:
-	docker-compose down
+	docker compose down
 
 logs:
-	docker-compose logs -f
+	docker compose logs -f
 
 build:
-	docker-compose build
+	docker compose build
 
 frontend:
-	docker-compose exec frontend sh
+	docker compose logs -f frontend
 
 backend:
-	docker-compose exec backend sh
+	docker compose logs -f backend
 
 db:
-	docker-compose exec db psql -U jobtracker -d jobtracker
+	docker compose logs -f db
