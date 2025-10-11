@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { postJson } from "../api";
+import { useAuth } from "../context/AuthContext";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const { login } = useAuth();
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -14,8 +16,8 @@ export default function Login() {
         password,
       });
       if (data.token) {
-        localStorage.setItem("token", data.token);
-        setMessage("Logged in");
+        login(data.token, email);
+        setMessage("Logged in successfully!");
       } else {
         setMessage(JSON.stringify(data));
       }
