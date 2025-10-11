@@ -12,19 +12,16 @@ services:
       - db_data:/var/lib/postgresql/data
   backend:
     build: ./backend
-    command: npm run start:prod
+    command: npm run dev
     ports:
       - '5000:5000'
     environment:
       DATABASE_URL: postgres://jobtracker:jobtrackerpass@db:5432/jobtracker
+      NODE_ENV: development
     depends_on:
       - db
-  frontend:
-    build: ./frontend
-    command: npm run dev -- --host
-    ports:
-      - '5173:5173'
-    depends_on:
-      - backend
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
 volumes:
   db_data:

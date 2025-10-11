@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./App.css";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import JobsPage from "./pages/JobsPage";
 import { useAuth } from "./context/AuthContext";
 
 function App() {
@@ -10,15 +11,32 @@ function App() {
 
   if (isAuthenticated) {
     return (
-      <div style={{ padding: 20 }}>
-        <nav>
-          <span>Welcome, {user}!</span>
-          <button onClick={logout} style={{ marginLeft: 20 }}>
+      <div>
+        <nav
+          style={{
+            padding: "16px 20px",
+            borderBottom: "1px solid #e5e7eb",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            background: "white",
+          }}
+        >
+          <span style={{ fontWeight: 500 }}>Welcome, {user}!</span>
+          <button
+            onClick={logout}
+            style={{
+              padding: "8px 16px",
+              border: "1px solid #d1d5db",
+              borderRadius: "6px",
+              background: "white",
+              cursor: "pointer",
+            }}
+          >
             Logout
           </button>
         </nav>
-        <h1>Job Hunt Tracker</h1>
-        <p>You are logged in. Job tracking features coming soon!</p>
+        <JobsPage />
       </div>
     );
   }
