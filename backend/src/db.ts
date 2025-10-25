@@ -20,4 +20,22 @@ export async function initDb() {
       created_at TIMESTAMP DEFAULT NOW()
     );
   `);
+
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS job_applications (
+      id SERIAL PRIMARY KEY,
+      user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      company TEXT NOT NULL,
+      position TEXT NOT NULL,
+      application_date DATE NOT NULL,
+      status TEXT NOT NULL CHECK (status IN ('applied', 'interviewing', 'rejected', 'offer', 'withdrawn')),
+      application_url TEXT,
+      contact_person TEXT,
+      contact_email TEXT,
+      contact_phone TEXT,
+      notes TEXT,
+      created_at TIMESTAMP DEFAULT NOW(),
+      updated_at TIMESTAMP DEFAULT NOW()
+    );
+  `);
 }

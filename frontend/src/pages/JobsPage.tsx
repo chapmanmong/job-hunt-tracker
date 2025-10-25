@@ -10,6 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../components/ui/select";
+import { getJobs, createJob, updateJob, deleteJob } from "../api";
 import type {
   JobApplication,
   CreateJobApplication,
@@ -23,40 +24,17 @@ export default function JobsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
 
-  // Mock data for now - will be replaced with API calls
+  // Load jobs from API
   useEffect(() => {
-    const mockJobs: JobApplication[] = [
-      {
-        id: 1,
-        company: "Google",
-        position: "Software Engineer",
-        applicationDate: "2025-10-01",
-        status: "interviewing",
-        applicationUrl: "https://careers.google.com/jobs/123",
-        contactPerson: "Jane Smith",
-        contactEmail: "jane@google.com",
-        contactPhone: "+1-555-0123",
-        notes: "Phone screen scheduled for next week",
-        userId: 1,
-        createdAt: "2025-10-01T10:00:00Z",
-        updatedAt: "2025-10-01T10:00:00Z",
-      },
-      {
-        id: 2,
-        company: "Microsoft",
-        position: "Frontend Developer",
-        applicationDate: "2025-09-28",
-        status: "applied",
-        applicationUrl: "https://careers.microsoft.com/jobs/456",
-        contactPerson: "John Doe",
-        contactEmail: "john@microsoft.com",
-        notes: "Applied through LinkedIn",
-        userId: 1,
-        createdAt: "2025-09-28T14:00:00Z",
-        updatedAt: "2025-09-28T14:00:00Z",
-      },
-    ];
-    setJobs(mockJobs);
+    const loadJobs = async () => {
+      try {
+        const jobsData = await getJobs();
+        setJobs(jobsData);
+      } catch (error) {
+        console.error("Failed to load jobs:", error);
+      }
+    };
+    loadJobs();
   }, []);
 
   const filteredJobs = jobs.filter((job) => {
@@ -80,34 +58,33 @@ export default function JobsPage() {
     setIsModalOpen(true);
   };
 
-  const handleDeleteJob = (id: number) => {
+  const handleDeleteJob = async (id: number) => {
     if (confirm("Are you sure you want to delete this job application?")) {
-      setJobs(jobs.filter((job) => job.id !== id));
+      try {
+        await deleteJob(id);
+        setJobs(jobs.filter((job) => job.id !== id));
+      } catch (error) {
+        console.error("Failed to delete job:", error);
+      }
     }
   };
 
-  const handleSubmitJob = (
+  const handleSubmitJob = async (
     jobData: CreateJobApplication | UpdateJobApplication
   ) => {
-    if ("id" in jobData) {
-      // Update existing job
-      setJobs(
-        jobs.map((job) =>
-          job.id === jobData.id
-            ? { ...job, ...jobData, updatedAt: new Date().toISOString() }
-            : job
-        )
-      );
-    } else {
-      // Create new job
-      const newJob: JobApplication = {
-        ...jobData,
-        id: Math.max(...jobs.map((j) => j.id), 0) + 1,
-        userId: 1, // Will use actual user ID from auth context
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      };
-      setJobs([...jobs, newJob]);
+    try {
+      if ("id" in jobData) {
+        // Update existing job
+        const updatedJob = await updateJob(jobData.id, jobData);
+        setJobs(jobs.map((job) => (job.id === jobData.id ? updatedJob : job)));
+      } else {
+        // Create new job
+        const newJob = await createJob(jobData);
+        setJobs([...jobs, newJob]);
+      }
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error("Failed to save job:", error);
     }
   };
 

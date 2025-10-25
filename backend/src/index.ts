@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 
 import authRoutes from "./auth/authRoutes";
+import jobRoutes from "./jobs/jobRoutes";
 import { initDb } from "./db";
 
 dotenv.config();
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/auth", authRoutes);
+app.use("/jobs", jobRoutes);
 
 app.get("/", (req, res) => {
   res.send("Job Hunt Tracker API running");
