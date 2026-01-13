@@ -3,19 +3,9 @@ import JobTable from "../components/JobTable";
 import JobModal from "../components/JobModal";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 import { getJobs, createJob, updateJob, deleteJob } from "../api";
-import type {
-  JobApplication,
-  CreateJobApplication,
-  UpdateJobApplication,
-} from "../types/job";
+import type { JobApplication, CreateJobApplication, UpdateJobApplication } from "../types/job";
 
 export default function JobsPage() {
   const [jobs, setJobs] = useState<JobApplication[]>([]);
@@ -69,9 +59,7 @@ export default function JobsPage() {
     }
   };
 
-  const handleSubmitJob = async (
-    jobData: CreateJobApplication | UpdateJobApplication
-  ) => {
+  const handleSubmitJob = async (jobData: CreateJobApplication | UpdateJobApplication) => {
     try {
       if ("id" in jobData) {
         // Update existing job
@@ -109,12 +97,8 @@ export default function JobsPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight">
-            Job Applications
-          </h1>
-          <p className="text-muted-foreground mt-2">
-            Track and manage your job applications
-          </p>
+          <h1 className="text-4xl font-bold tracking-tight">Job Applications</h1>
+          <p className="text-muted-foreground mt-2">Track and manage your job applications</p>
         </div>
         <Button onClick={handleAddJob} size="lg" className="min-w-40">
           Add New Job
@@ -123,36 +107,20 @@ export default function JobsPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <div className="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
-          <div className="text-3xl font-bold text-slate-900 dark:text-slate-100">
-            {statusCounts.total}
-          </div>
-          <div className="text-sm text-slate-600 dark:text-slate-400 font-medium">
-            Total Applications
-          </div>
+          <div className="text-3xl font-bold text-slate-900 dark:text-slate-100">{statusCounts.total}</div>
+          <div className="text-sm text-slate-600 dark:text-slate-400 font-medium">Total Applications</div>
         </div>
         <div className="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
-          <div className="text-3xl font-bold text-blue-600">
-            {statusCounts.applied}
-          </div>
-          <div className="text-sm text-slate-600 dark:text-slate-400 font-medium">
-            Applied
-          </div>
+          <div className="text-3xl font-bold text-blue-600">{statusCounts.applied}</div>
+          <div className="text-sm text-slate-600 dark:text-slate-400 font-medium">Applied</div>
         </div>
         <div className="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
-          <div className="text-3xl font-bold text-orange-600">
-            {statusCounts.interviewing}
-          </div>
-          <div className="text-sm text-slate-600 dark:text-slate-400 font-medium">
-            Interviewing
-          </div>
+          <div className="text-3xl font-bold text-orange-600">{statusCounts.interviewing}</div>
+          <div className="text-sm text-slate-600 dark:text-slate-400 font-medium">Interviewing</div>
         </div>
         <div className="bg-white dark:bg-slate-900 rounded-xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
-          <div className="text-3xl font-bold text-green-600">
-            {statusCounts.offer}
-          </div>
-          <div className="text-sm text-slate-600 dark:text-slate-400 font-medium">
-            Offers
-          </div>
+          <div className="text-3xl font-bold text-green-600">{statusCounts.offer}</div>
+          <div className="text-sm text-slate-600 dark:text-slate-400 font-medium">Offers</div>
         </div>
       </div>
 
@@ -178,13 +146,10 @@ export default function JobsPage() {
         </Select>
       </div>
 
-      <JobTable
-        jobs={filteredJobs}
-        onEditJob={handleEditJob}
-        onDeleteJob={handleDeleteJob}
-      />
+      <JobTable jobs={filteredJobs} onEditJob={handleEditJob} onDeleteJob={handleDeleteJob} />
 
       <JobModal
+        key={editingJob?.id || "new"}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleSubmitJob}

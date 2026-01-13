@@ -25,6 +25,15 @@ export async function apiRequest(url: string, options: RequestInit = {}) {
     headers,
   });
 
+  // Handle expired/invalid tokens
+  if (res.status === 401 || res.status === 403) {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    alert("Your session has expired. Please log in again.");
+    window.location.href = "/login";
+    throw new Error("Authentication expired");
+  }
+
   const text = await res.text();
   try {
     return JSON.parse(text);
