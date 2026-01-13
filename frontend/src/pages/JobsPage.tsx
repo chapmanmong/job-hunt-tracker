@@ -148,13 +148,9 @@ export default function JobsPage() {
 
       <JobTable jobs={filteredJobs} onEditJob={handleEditJob} onDeleteJob={handleDeleteJob} />
 
-      <JobModal
-        key={editingJob?.id || "new"}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSubmit={handleSubmitJob}
-        job={editingJob}
-      />
+      {isModalOpen && (
+        <JobModal key={editingJob?.id || "new"} onClose={() => setIsModalOpen(false)} onSubmit={handleSubmitJob} job={editingJob} />
+      )}
     </div>
   );
 }

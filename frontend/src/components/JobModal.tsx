@@ -8,13 +8,12 @@ import { Textarea } from "./ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
 interface JobModalProps {
-  isOpen: boolean;
   onClose: () => void;
   onSubmit: (job: CreateJobApplication | UpdateJobApplication) => void;
   job?: JobApplication; // For editing existing job
 }
 
-export default function JobModal({ isOpen, onClose, onSubmit, job }: JobModalProps) {
+export default function JobModal({ onClose, onSubmit, job }: JobModalProps) {
   const [formData, setFormData] = useState<CreateJobApplication>({
     company: job?.company || "",
     position: job?.position || "",
@@ -51,10 +50,8 @@ export default function JobModal({ isOpen, onClose, onSubmit, job }: JobModalPro
     });
   };
 
-  if (!isOpen) return null;
-
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog onOpenChange={onClose} open={true}>
       <DialogContent className="sm:max-w-[625px] max-h-[90vh] overflow-y-auto">
         <DialogHeader className="pb-4">
           <DialogTitle className="text-2xl font-bold">{job ? "Edit" : "Add New"} Job Application</DialogTitle>
