@@ -4,6 +4,8 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 interface SignupProps {
   onBack?: () => void;
 }
@@ -31,7 +33,7 @@ export default function Signup({ onBack }: SignupProps) {
     setIsLoading(true);
     setMessage("");
     try {
-      const data = await postJson("http://localhost:5000/auth/signup", {
+      const data = await postJson(`${API_URL}/auth/signup`, {
         email,
         password,
       });

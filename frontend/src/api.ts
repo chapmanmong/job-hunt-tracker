@@ -1,3 +1,5 @@
+const API_URL = import.meta.env.VITE_API_URL;
+
 export async function postJson(url: string, body: any) {
   const res = await fetch(url, {
     method: "POST",
@@ -43,25 +45,25 @@ export async function apiRequest(url: string, options: RequestInit = {}) {
 }
 
 export async function getJobs() {
-  return apiRequest("http://localhost:5000/jobs");
+  return apiRequest(`${API_URL}/jobs`);
 }
 
 export async function createJob(jobData: any) {
-  return apiRequest("http://localhost:5000/jobs", {
+  return apiRequest(`${API_URL}/jobs`, {
     method: "POST",
     body: JSON.stringify(jobData),
   });
 }
 
 export async function updateJob(id: number, jobData: any) {
-  return apiRequest(`http://localhost:5000/jobs/${id}`, {
+  return apiRequest(`${API_URL}/jobs/${id}`, {
     method: "PUT",
     body: JSON.stringify(jobData),
   });
 }
 
 export async function deleteJob(id: number) {
-  return apiRequest(`http://localhost:5000/jobs/${id}`, {
+  return apiRequest(`${API_URL}/jobs/${id}`, {
     method: "DELETE",
   });
 }

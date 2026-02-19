@@ -4,6 +4,7 @@ import { useAuth } from "../context/AuthContext";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
+const API_URL = import.meta.env.VITE_API_URL;
 
 interface LoginProps {
   onBack?: () => void;
@@ -21,7 +22,7 @@ export default function Login({ onBack }: LoginProps) {
     setIsLoading(true);
     setMessage("");
     try {
-      const data = await postJson("http://localhost:5000/auth/login", {
+      const data = await postJson(`${API_URL}/auth/login`, {
         email,
         password,
       });

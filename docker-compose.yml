@@ -15,9 +15,11 @@ services:
     command: npm run dev
     ports:
       - '5000:5000'
-    environment:
-      DATABASE_URL: postgres://jobtracker:jobtrackerpass@db:5432/jobtracker
-      NODE_ENV: development
+    env_file:
+      - ./backend/.env.local
+    # environment:
+      # DATABASE_URL: postgres://jobtracker:jobtrackerpass@db:5432/jobtracker
+      # NODE_ENV: development
     depends_on:
       - db
     volumes:
