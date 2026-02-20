@@ -63,7 +63,7 @@ export async function updateJob(id: number, jobData: any) {
 }
 
 export async function deleteJob(id: number) {
-  return apiRequest(`${API_URL}/${id}`, {
+  return apiRequest(`${API_URL}/jobs/${id}`, {
     method: "DELETE",
   });
 }
