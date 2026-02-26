@@ -45,35 +45,35 @@ module "igw" {
 
 
 
-# module "rds" {
-#   source      = "./modules/rds"
-#   vpc_id      = module.vpc.vpc_id
-#   db_name     = var.db_name
-#   db_username = var.db_username
-#   #db password will come from Secrets Manager
-#   app_name    = var.app_name
-#   environment = var.environment
-#   aws_region  = var.aws_region
-# }
+module "rds" {
+  source            = "./modules/rds"
+  app_name          = var.app_name
+  environment       = var.environment
+  vpc_id            = aws_vpc.jh_tracker_vpc.id
+  private_subnet_id = aws_subnet.private_subnet.id
+  public_subnet_id  = aws_subnet.public_subnet.id
+}
 
-# module "ecr" {
-#   source      = "./modules/ecr"
-#   app_name    = var.app_name
-#   environment = var.environment
-#   aws_region  = var.aws_region
-# }
+module "ecr" {
+  source   = "./modules/ecr"
+  app_name = var.app_name
+}
 
-# module "ecs" {
-#   source         = "./modules/ecr"
-#   vpc_id         = module.vpc.vpc_id
-#   cluster_name   = "${var.app_name}-${var.environment}-cluster"
-#   app_name       = var.app_name
-#   environment    = var.environment
-#   aws_region     = var.aws_region
-#   ecr_repo_url   = module.ecr.repository_url
-#   db_secret_arn  = module.secrets.db_secret_arn
-#   jwt_secret_arn = module.secrets.jwt_secret_arn
-# }
+module "ecs" {
+  source       = "./modules/ecs"
+  app_name     = var.app_name
+  environment  = var.environment
+  db_username  = var.db_username
+  db_name      = var.db_name
+  db_host      = module.rds.db_host
+  db_port      = module.rds.db_port
+  ecr_repo_url = module.ecr.ecr_repo_url
+}
+
+module "iam" {
+  source   = "./modules/iam"
+  app_name = var.app_name
+}
 
 # module "alb" {
 #   source      = "./modules/alb"
@@ -100,14 +100,5 @@ module "igw" {
 #   providers = {
 #     aws.us_east_1 = aws.us_east_1
 #   }
-# }
-
-# module "secrets" {
-#   source      = "./modules/secrets"
-#   app_name    = var.app_name
-#   environment = var.environment
-#   db_username = var.db_username
-#   db_name     = var.db_name
-#   # db_password and jwt_secret will be created here
 # }
 
