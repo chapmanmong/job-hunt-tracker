@@ -28,8 +28,20 @@ variable "db_port" {
   type        = string
 }
 
+variable "db_password" {
+  description = "Password for the postgres database"
+  type        = string
+}
+
 variable "ecr_repo_url" {
   description = "URL of ecr repo"
   type        = string
 }
 
+variable "execution_role_arn" {
+  type = string
+}
+
+variable "task_role_arn" {
+  type = string
+}

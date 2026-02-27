@@ -5,5 +5,5 @@ output "db_host" {
 
 output "db_port" {
   description = "Port of the PostgreSQL database"
-  value       = aws_db_instance.rds_instance
+  value       = aws_db_instance.rds_instance.port
 }

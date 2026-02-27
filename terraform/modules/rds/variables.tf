@@ -22,3 +22,7 @@ variable "vpc_id" {
   description = ""
   type        = string
 }
+
+variable "db_password" {
+  type = string
+}

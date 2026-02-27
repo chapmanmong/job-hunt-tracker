@@ -8,8 +8,8 @@ resource "aws_ecs_task_definition" "backend_task" {
   cpu                      = "256"
   memory                   = "512"
 
-  execution_role_arn = module.iam.ecs_execution_role.arn
-  task_role_arn      = module.iam.ecs_task_role.arn
+  execution_role_arn = var.execution_role_arn
+  task_role_arn      = var.task_role_arn
 
   container_definitions = jsonencode([
     {
@@ -40,12 +40,8 @@ resource "aws_ecs_task_definition" "backend_task" {
           value = var.db_username
         },
         {
-          name      = "DB_PASSWORD"
-          valueFrom = module.secrets.db_secret_arn
-        },
-        {
-          name      = "JWT_SECRET"
-          valueFrom = module.secrets.jwt_secret_arn
+          name  = "DB_PASSWORD"
+          value = var.db_password
         }
       ]
     }

@@ -1,9 +1,3 @@
-module "route53" {
-  source      = "./modules/route53"
-  domain_name = var.domain_name
-  subdomain   = var.subdomain
-}
-
 resource "aws_vpc" "jh_tracker_vpc" {
   cidr_block           = "10.0.0.0/16"
   enable_dns_hostnames = true
@@ -35,6 +29,12 @@ resource "aws_subnet" "private_subnet" {
   availability_zone = "ap-southeast-2a"
 }
 
+module "route53" {
+  source      = "./modules/route53"
+  domain_name = var.domain_name
+  subdomain   = var.subdomain
+}
+
 module "igw" {
   source           = "./modules/igw"
   environment      = var.environment
@@ -52,6 +52,7 @@ module "rds" {
   vpc_id            = aws_vpc.jh_tracker_vpc.id
   private_subnet_id = aws_subnet.private_subnet.id
   public_subnet_id  = aws_subnet.public_subnet.id
+  db_password       = module.secrets.db_password
 }
 
 module "ecr" {
@@ -67,12 +68,21 @@ module "ecs" {
   db_name      = var.db_name
   db_host      = module.rds.db_host
   db_port      = module.rds.db_port
+  db_password  = module.secrets.db_password
   ecr_repo_url = module.ecr.ecr_repo_url
+  execution_role_arn = module.iam.ecs_execution_role_arn
+  task_role_arn = module.iam.ecs_task_role_arn
 }
 
 module "iam" {
   source   = "./modules/iam"
   app_name = var.app_name
+}
+
+module "secrets" {
+  source      = "./modules/secrets"
+  app_name    = var.app_name
+  environment = var.environment
 }
 
 # module "alb" {
