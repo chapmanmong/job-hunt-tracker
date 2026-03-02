@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
   res.send("Job Hunt Tracker API running");
 });
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 8080;
 initDb()
   .then(() => {
     app.listen(PORT, () => {

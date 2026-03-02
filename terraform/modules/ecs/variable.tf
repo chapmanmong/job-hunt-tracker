@@ -28,9 +28,9 @@ variable "db_port" {
   type        = string
 }
 
-variable "db_password" {
-  description = "Password for the postgres database"
-  type        = string
+
+variable "db_password_arn" {
+  type = string
 }
 
 variable "ecr_repo_url" {

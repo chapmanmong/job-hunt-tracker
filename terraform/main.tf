@@ -3,18 +3,23 @@ resource "aws_vpc" "jh_tracker_vpc" {
   enable_dns_hostnames = true
   enable_dns_support   = true
   tags = {
-    Environment = var.environment
-    Name        = "${var.app_name}-${var.environment}-vpc"
+    Environment = local.environment
+    Name        = "${var.app_name}-${local.environment}-vpc"
   }
 }
+
+locals {
+  environment = terraform.workspace
+}
+
 
 resource "aws_subnet" "public_subnet" {
   vpc_id            = aws_vpc.jh_tracker_vpc.id
   cidr_block        = "10.0.1.0/24"
   availability_zone = "ap-southeast-2a"
   tags = {
-    Environment = var.environment
-    Name        = "${var.app_name}-${var.environment}-public-subnet"
+    Environment = local.environment
+    Name        = "${var.app_name}-${local.environment}-public-subnet"
   }
   map_public_ip_on_launch = true
 }
@@ -23,8 +28,8 @@ resource "aws_subnet" "private_subnet" {
   vpc_id     = aws_vpc.jh_tracker_vpc.id
   cidr_block = "10.0.2.0/24"
   tags = {
-    Environment = var.environment
-    Name        = "${var.app_name}-${var.environment}-private-subnet"
+    Environment = local.environment
+    Name        = "${var.app_name}-${local.environment}-private-subnet"
   }
   availability_zone = "ap-southeast-2a"
 }
@@ -37,7 +42,7 @@ module "route53" {
 
 module "igw" {
   source           = "./modules/igw"
-  environment      = var.environment
+  environment      = local.environment
   app_name         = var.app_name
   vpc_id           = aws_vpc.jh_tracker_vpc.id
   public_subnet_id = aws_subnet.public_subnet.id
@@ -48,10 +53,9 @@ module "igw" {
 module "rds" {
   source            = "./modules/rds"
   app_name          = var.app_name
-  environment       = var.environment
+  environment       = local.environment
   vpc_id            = aws_vpc.jh_tracker_vpc.id
   private_subnet_id = aws_subnet.private_subnet.id
-  public_subnet_id  = aws_subnet.public_subnet.id
   db_password       = module.secrets.db_password
 }
 
@@ -61,17 +65,17 @@ module "ecr" {
 }
 
 module "ecs" {
-  source       = "./modules/ecs"
-  app_name     = var.app_name
-  environment  = var.environment
-  db_username  = var.db_username
-  db_name      = var.db_name
-  db_host      = module.rds.db_host
-  db_port      = module.rds.db_port
-  db_password  = module.secrets.db_password
-  ecr_repo_url = module.ecr.ecr_repo_url
+  source             = "./modules/ecs"
+  app_name           = var.app_name
+  environment        = local.environment
+  db_username        = var.db_username
+  db_name            = var.db_name
+  db_host            = module.rds.db_host
+  db_port            = module.rds.db_port
+  db_password_arn    = module.secrets.db_password_arn
+  ecr_repo_url       = module.ecr.ecr_repo_url
   execution_role_arn = module.iam.ecs_execution_role_arn
-  task_role_arn = module.iam.ecs_task_role_arn
+  task_role_arn      = module.iam.ecs_task_role_arn
 }
 
 module "iam" {
@@ -82,21 +86,21 @@ module "iam" {
 module "secrets" {
   source      = "./modules/secrets"
   app_name    = var.app_name
-  environment = var.environment
+  environment = local.environment
 }
 
 # module "alb" {
 #   source      = "./modules/alb"
 #   vpc_id      = module.vpc.vpc_id
 #   app_name    = var.app_name
-#   environment = var.environment
+#   environment = local.environment
 #   aws_region  = var.aws_region
 # }
 
 # module "s3" {
 #   source       = "./modules/s3"
 #   app_name     = var.app_name
-#   environment  = var.environment
+#   environment  = local.environment
 #   frontend_url = var.frontend_url
 # }
 

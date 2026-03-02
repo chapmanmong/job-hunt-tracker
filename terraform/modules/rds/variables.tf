@@ -8,11 +8,6 @@ variable "environment" {
   type        = string
 }
 
-variable "public_subnet_id" {
-  description = ""
-  type        = string
-}
-
 variable "private_subnet_id" {
   description = ""
   type        = string

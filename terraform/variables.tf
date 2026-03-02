@@ -10,12 +10,6 @@ variable "app_name" {
   default     = "job-hunt-tracker"
 }
 
-variable "environment" {
-  description = "Deployment environment (e.g., dev, staging, prod)"
-  type        = string
-  default     = "prod"
-}
-
 variable "domain_name" {
   description = "Domain name for the application"
   type        = string

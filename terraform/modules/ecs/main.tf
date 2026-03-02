@@ -38,12 +38,12 @@ resource "aws_ecs_task_definition" "backend_task" {
         {
           name  = "DB_USERNAME"
           value = var.db_username
-        },
-        {
-          name  = "DB_PASSWORD"
-          value = var.db_password
         }
       ]
+      secrets = [{
+        name      = "DB_PASSWORD"
+        valueFrom = var.db_password_arn
+      }]
     }
   ])
 }

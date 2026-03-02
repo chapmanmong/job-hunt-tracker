@@ -13,7 +13,7 @@ make up
 This will build and start three services:
 
 - `db` - PostgreSQL (port 5432)
-- `backend` - Node/Express API (port 5000)
+- `backend` - Node/Express API (port 8080)
 - `frontend` - Vite dev server (port 5173)
 
 Open the frontend: `http://localhost:5173`
@@ -28,7 +28,7 @@ Auth endpoints (temporary in-memory store):
 Example cURL:
 
 ```bash
-curl -X POST http://localhost:5000/auth/signup -H "Content-Type: application/json" -d '{"email":"me@example.com","password":"pass"}'
+curl -X POST http://localhost:8080/auth/signup -H "Content-Type: application/json" -d '{"email":"me@example.com","password":"pass"}'
 ```
 
 ## Development notes
